@@ -54,7 +54,7 @@ const Home: React.FC = () => {
     }
 
     return (
-        <div className='bg-white'>
+        <div className='bg-white h-screen'>
             <div className="bg-white m-3 h-auto mt-[65px] md:mt-[80px] md:pt-6 md:m-6 md:px-16">
                 <div className="flex items-center justify-center flex-col">
                     <div className='flex justify-between items-center space-x-8 '>

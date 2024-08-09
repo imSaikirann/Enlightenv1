@@ -71,6 +71,7 @@ export const Create = () => {
                 className="rounded w-full md:text-xl py-2 px-3 text-gray-700 bg-zinc-50 font-create leading-tight focus:outline-none border-none"
                 placeholder="Enter title"
                 value={title}
+                readOnly
                 onChange={(e) => setTitle(e.target.value)}
                 required
               />
