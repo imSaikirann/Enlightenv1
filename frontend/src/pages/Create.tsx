@@ -3,15 +3,21 @@ import axios from 'axios';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { selectedQuestion } from '../store/atoms/dataAtoms';
 
-export interface selectedData {
+export interface Question {
+  id: string;
   question: string;
 }
 
+export interface selectedData {
+  id: string;
+  question: Question; 
+}
+
 export const Create = () => {
-  const selectedQ = useRecoilValue(selectedQuestion);
+  const selectedQ = useRecoilValue<selectedData[]>(selectedQuestion);
   const setQuestion = useSetRecoilState<selectedData[]>(selectedQuestion);
 
-  const TitleValue = (selectedQ[0] && selectedQ[0].question) || '';
+  const TitleValue = (selectedQ[0] && selectedQ[0].question.question) || '';
   const [title, setTitle] = useState(TitleValue);
   const [information, setInformation] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,8 +35,10 @@ export const Create = () => {
       const res = await axios.post(
         `${BACKEND_URL}/topic/publishTopic`,
         {
+          questionId :selectedQ[0].question.id,
           title,
           information,
+          authorId : ""
         },
         {
           headers: {
@@ -50,9 +58,6 @@ export const Create = () => {
     }
   };
 
-  const handleClear = () => {
-    setQuestion([]);
-  };
 
   return (
     <div className='bg-white h-[1000px]'>
@@ -83,15 +88,7 @@ export const Create = () => {
             </div>
 
             <div className="flex items-center justify-between space-x-6">
-              {selectedQ[0] && (
-                <button
-                  type="button"
-                  onClick={handleClear}
-                  className="w-full bg-gray-600 border-slate-800 md:w-[200px] font-buttons text-white font-bold py-2 px-4 rounded-sm focus:outline-none focus:shadow-outline"
-                >
-                  {loading ? 'Clearing..' : 'Clear title'}
-                </button>
-              )}
+             
 
               <button
                 type="submit"

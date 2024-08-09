@@ -8,35 +8,47 @@ datasource db {
 }
 
 model User {
-  id        String      @id @default(uuid())
-  email     String      @unique
-  password  String
-  userName  String      @unique
-  topics    Topic[]
-  questions Questions[] 
+  id          String       @id @default(uuid())
+  email       String       @unique
+  password    String
+  userName    String       @unique
+  questions   Questions[]  @relation("UserQuestions")
+  topics      Topic[]
+  answers     Answers[]   
 }
 
 model Topic {
-  id          String    @id @default(uuid())
+  id          String       @id @default(uuid())
+  questionId  String?     
+  authorId    String?
+  author      User?        @relation(fields: [authorId], references: [id])
   title       String
   information String
-  authorId    String
-  createdAt   DateTime  @default(now())
-  author      User      @relation(fields: [authorId], references: [id])
-  likes       Like[]
+  createdAt   DateTime     @default(now())
+  question    Questions?   @relation(fields: [questionId], references: [id])
+  answers     Answers[]    @relation("TopicAnswers")
+  Questions Questions[] @relation("QuestionTopics")
+  Answers Answers[]
+
 }
 
 model Questions {
-  id          String    @id @default(uuid())
-  question    String 
+  id          String       @id @default(uuid())
+  question    String
   authorId    String
-  createdAt   DateTime  @default(now())
-  author      User      @relation(fields: [authorId], references: [id])
+  qauthorName String       @default("Unknown")
+  createdAt   DateTime     @default(now())
+  author      User         @relation("UserQuestions", fields: [authorId], references: [id])
+  topics      Topic[]      @relation("QuestionTopics")
+  Topic Topic[]
 }
 
-model Like {
-  id         String    @id @default(uuid())
-  likeCount  Int       @default(0)
-  topicId    String
-  topic      Topic     @relation(fields: [topicId], references: [id], onDelete: Cascade)
+model Answers {
+  id          String       @id @default(uuid())
+  topicId     String?
+  userId      String?
+  topic       Topic?       @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  user        User?        @relation(fields: [userId], references: [id])
+
+  Topic Topic[] @relation("TopicAnswers")
 }

@@ -74,33 +74,61 @@ questionRoutes.use('/*', async (c, next) => {
 
 
 
-//ask a question
+
 questionRoutes.post('/askQuestion', async (c) => {
     const body = await c.req.json();
-    const prisma = new PrismaClient({ datasourceUrl: c.env.DATABASE_URL }).$extends(withAccelerate());
+    
+   
+    const prisma = new PrismaClient({
+        datasources: {
+            db: {
+                url: c.env.DATABASE_URL,
+            },
+        },
+    });
+    
     try {
+      
         const authorId = c.get('authorId');
         if (!authorId) {
             return c.json({ message: "Unauthorized: Author not found" }, 401);
         }
 
+        const user = await prisma.user.findUnique({
+            where: {
+                id: authorId,
+            },
+            select: {
+                userName: true,
+            },
+        });
+
+        if (!user) {
+            return c.json({ message: 'Author not found' }, 404);
+        }
+
+        
         const res = await prisma.questions.create({
             data: {
                 question: body.question,
-                createdAt:body.createdAt,
-                authorId :authorId
-            }
+                createdAt: body.createdAt || new Date(), 
+                authorId: authorId,
+                qauthorName: user.userName, 
+            },
         });
 
+ 
         return c.json(res, 201);
 
     } catch (error) {
         console.error(error);
         return c.json({ message: 'Internal Server Error' }, 500);
     } finally {
+      
         await prisma.$disconnect();
     }
 });
+
 
 
 

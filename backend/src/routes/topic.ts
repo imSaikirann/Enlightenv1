@@ -29,7 +29,7 @@ topicRoutes.get('/bulk', async (c) => {
       
         const bulk = await prisma.topic.findMany({
             include: {
-                author: true 
+                author: true ,
             },
             orderBy :{
                 createdAt:'desc'
@@ -41,8 +41,9 @@ topicRoutes.get('/bulk', async (c) => {
             title: topic.title,
             information: topic.information,
             authorId: topic.authorId,
-            authorName: topic.author.userName ,
-            createdAt : topic.createdAt
+            authorName: topic.author?.userName ,
+            createdAt : topic.createdAt,
+            qauthorName:topic.qauthorName,
         }));
 
         return c.json({ data: response }, 200);
@@ -132,58 +133,136 @@ topicRoutes.use('/*', async (c, next) => {
     }
 });
 
-//publish a Topic
-topicRoutes.post('/publishTopic', async (c) => {
-    const body = await c.req.json();
-    const validation = topicInput.safeParse(body);
 
-    if (!validation.success) {
-        return c.json({ error: validation.error.errors.map(e => e.message) }, 400);
-    }
+topicRoutes.get('/user/notifications', async (c) => {
 
-    const prisma = new PrismaClient({ datasourceUrl: c.env.DATABASE_URL }).$extends(withAccelerate());
     try {
+        const prisma = new PrismaClient({ datasourceUrl: c.env.DATABASE_URL }).$extends(withAccelerate());
+        const authorId = c.get('authorId');
+       const user = await prisma.user.findUnique({
+        where: {
+            id: authorId, 
+        },
+        include: {
+            answers: true, 
+        },
+      });
+
+    
+    
+   
+  
+      if (!user) {
+        return c.json({ message: 'User not found' }, 404);
+      }
+  
+      return c.json(user, 200)
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      return c.json({ message: 'Internal Server Error' }, 500);
+    }
+  });
+
+
+  topicRoutes.post('/publishTopic', async (c) => {
+    try {
+        const rawBody = await c.req.text();  
+        const body = JSON.parse(rawBody);  
+        const validation = topicInput.safeParse(body);
+
+        if (!validation.success) {
+            return c.json({ error: validation.error.errors.map(e => e.message) }, 400);
+        }
+
         const authorId = c.get('authorId');
         if (!authorId) {
             return c.json({ message: "Unauthorized: Author not found" }, 401);
         }
 
-    
+        const prisma = new PrismaClient({ datasourceUrl: c.env.DATABASE_URL }).$extends(withAccelerate());
+        const question = await prisma.questions.findUnique({ 
+            where: { id: body.questionId },
+            select: { authorId: true }
+        });
+
+        if (!question) {
+            return c.json({ message: "Question not found" }, 404);
+        }
+
+        const questionAuthor = await prisma.user.findUnique({
+            where: { id: question.authorId },
+            select: { userName: true }
+        });
+
         const createdTopic = await prisma.topic.create({
             data: {
                 title: body.title,
                 information: body.information,
-                authorId: authorId
+                authorId: authorId,
+                questionId: body.questionId
             }
         });
 
-  
         const author = await prisma.user.findUnique({
             where: { id: authorId },
-            select: { userName: true } 
+            select: { userName: true }
         });
+
         if (!author) {
             return c.json({ message: 'Author not found' }, 404);
         }
+        const newAnswer = await prisma.answers.create({
+            data: {
+                topicId  : createdTopic.id,
+                userId: question.authorId
+            }
+        });
+
+      
+
+       await prisma.user.update({
+            where: {
+                id: question.authorId, 
+            },
+            data: {
+                answers: {
+                    connect: {
+                        id: newAnswer.id,
+                    },
+                },
+            },
+        });
+        
+      
+        const userWithAnswers = await prisma.user.findUnique({
+            where: {
+                id: question.authorId, 
+            },
+            include: {
+                answers: true, 
+            },
+        });
+        
+        console.log(userWithAnswers);
+        
 
         const response = {
-            topic: {
+           
                 id: createdTopic.id,
                 title: createdTopic.title,
                 information: createdTopic.information,
                 authorId: createdTopic.authorId,
-                 authorName: author.userName 
-            }
+                authorName: author.userName,
+                qauthorName: questionAuthor?.userName 
+          
         };
 
         return c.json(response, 201);
 
-    } catch (error) {
-        console.error(error);
-        return c.json({ message: 'Internal Server Error' }, 500);
-    } finally {
-        await prisma.$disconnect();
-    }
+    } catch (jsonError) {
+        console.error("Error creating topic:", jsonError);
+        return c.json({ message: 'Invalid JSON format' }, 400);  
+    } 
 });
 
 
@@ -213,47 +292,6 @@ topicRoutes.delete('/delete', async (c) => {
 
 //likes
 
-topicRoutes.put('/like', async (c) => {
-    const body = await c.req.json();
-    const prisma = new PrismaClient({ datasourceUrl: c.env.DATABASE_URL }).$extends(withAccelerate());
-
-    try {
-      
-        const currentLike = await prisma.like.findFirst({
-            where: {
-                topicId: body.topicId,
-            },
-            select: {
-                likeCount: true,
-            },
-        });
-
-        if (!currentLike) {
-            return c.json({ message: 'Topic not found' }, 404);
-        }
-
-        console.log('Current like count:', currentLike.likeCount);
-
-        const newLike = await prisma.like.update({
-            where: {
-                
-                topicId: body.topicId,
-                id:body.id,
-            },
-            data: {
-              
-                likeCount: body.likeCount, 
-            },
-        });
-
-        return c.json(newLike);
-    } catch (error) {
-        console.error('Error adding topic like:', error);
-        return c.json({ message: 'Internal Server Error' }, 500);
-    } finally {
-        await prisma.$disconnect();
-    }
-});
 
 
 export { topicRoutes };

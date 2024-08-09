@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState, userStateSelector } from '../store/atoms/signupAtom';
 import { Link } from 'react-router-dom';
+import { getNotifications } from '../api/data';
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,6 +32,19 @@ export default function Navbar() {
             console.error('Logout failed:', error);
         }
     };
+
+    const handleNotifications = async () => {
+        try {
+            const res = await getNotifications();
+            console.log(res);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
+        handleNotifications();
+    }, []); 
 
     return (
         <>
@@ -68,7 +82,21 @@ export default function Navbar() {
 
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center space-x-4">
-                    <div>
+                    <div className='flex flex-row space-x-4'>
+                    <Link to="/notifications">
+                        <div className="flex items-center  space-x-1 text-primary opacity-95 cursor-pointer " onClick={handleNotifications}>
+                       
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 text-textColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+                            </svg>
+
+                            <div>
+                            <h2 className="text-textColor px-2 opacity-75">Notifications</h2>
+                            </div>
+                             
+                         
+                        </div>
+                        </Link>
 
                         <div className="flex items-center space-x-1 text-primary opacity-95 cursor-pointer">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5 text-slate-200 opacity-75">
@@ -107,7 +135,7 @@ export default function Navbar() {
                 {/* Mobile Menu */}
                 {isMenuOpen && (
                     <div className="fixed inset-0 bg-slate-600 bg-opacity-90 flex items-center justify-end z-50">
-                        <div className={`relative bg-zinc-950 h-full w-3/4 max-w-md transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                        <div className={`relative   bg-zinc-950 opacity-90 h-full w-3/4 max-w-md transition-transform duration-500 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                             <div className="absolute top-4 right-4 cursor-pointer" onClick={toggleMenu}>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-slate-300">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -116,18 +144,22 @@ export default function Navbar() {
                             <div className="flex flex-col  space-y-4 p-6">
                                 {isUser ? (
 
-                                    <div className="flex flex-col pt-20 items-center justify-center space-y-4">
+                                    <div className="flex flex-col pt-20 items-center justify-between space-y-4">
 
-                                        <Link to="/profile">
-                                            <button onClick={handleMenuClose} className=" border-primary text-textColor px-6 py-2 rounded-md w-[200px] hover:text-lg ">Profile</button>
-                                        </Link>
-                                      
+                                        <div className='flex flex-col space-y-7'>
+                                            <Link to="/profile">
+                                                <button onClick={handleMenuClose} className=" border-primary text-textColor px-6 py-2 rounded-md w-[200px] hover:text-lg ">Profile</button>
+                                            </Link>
+
 
                                             <Link to="/questions">
-                                                <button  className=" border-primary text-textColor px-6 py-2 rounded-md w-[200px] hover:text-lg">Questions</button>
+                                                <button className=" mb-4 border-primary text-textColor px-6 py-2 rounded-md w-[200px] hover:text-lg">Questions</button>
                                             </Link>
-                                 
-                                        <button onClick={handleLogout} className="bg-red-400 text-white px-4 py-2  rounded-full w-full">Logout</button>
+                                        </div>
+
+                                        <div className='mt-12 w-full'>
+                                            <button onClick={handleLogout} className="bg-red-400 text-white px-4 py-2   rounded-full w-full">Logout</button>
+                                        </div>
 
                                     </div>
 

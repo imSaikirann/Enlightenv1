@@ -3,7 +3,7 @@ import { askQuestion } from '../api/data';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { questionAtom, selectedQuestion } from '../store/atoms/dataAtoms';
 import { formatDistanceToNow } from 'date-fns';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export interface selectedData {
     question: string;
@@ -18,7 +18,7 @@ export interface Data {
 
 const Home: React.FC = () => {
     const [data, setData] = useRecoilState<Data[]>(questionAtom);
-    const setQuestion = useSetRecoilState<selectedData[]>(selectedQuestion);
+     const setQuestion = useSetRecoilState(selectedQuestion);
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true);
 
@@ -26,7 +26,7 @@ const Home: React.FC = () => {
         const fetchData = async () => {
             try {
                 const res = await askQuestion();
-                console.log(res)
+                console.log(res.bulk)
                 if (Array.isArray(res.bulk)) {
                     setData(res.bulk);
                 } else {
@@ -44,8 +44,12 @@ const Home: React.FC = () => {
         fetchData();
     }, [setData]);
 
-    const onHandleId = (selectedQuestion: string) => {
-        setQuestion([{ question: selectedQuestion }]);
+    const onHandleId = (selectedQuestion: any) => {
+        console.log(selectedQuestion)
+        setQuestion([{
+            question: selectedQuestion,
+            id: ''
+        }]);
         navigate('/create')
     }
 
@@ -58,16 +62,16 @@ const Home: React.FC = () => {
                             Total questions: {data.length}
                         </h2>
                         <div className="flex items-center flex-row  space-x-1 text-primary  cursor-pointer hover:opacity-100">
-                        <div className='hover:opacity-100'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-5 opacity-75 ">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-</svg>
+                            <div className='hover:opacity-100'>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-5 opacity-75 ">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
 
+                            </div>
+                            <div>
+                                <Link to='/askquestions'><h3 className="text-black opacity-75 text-sm px-2   ">Ask a question</h3></Link>
+                            </div>
                         </div>
-                        <div>
-                            <Link to='/askquestions'><h3 className="text-black opacity-75 text-sm px-2   ">Ask a question</h3></Link>
-                        </div>
-                    </div>
                     </div>
                     <div className='border-t-2  mt-3 w-full'>
                         {loading ? (
@@ -81,9 +85,9 @@ const Home: React.FC = () => {
                                 </div>
                             </div>
                         ) : (
-                         
-                             data.map((item) => (
-                                <div key={item.id} className="px-4 py-2 mt-4 mb-4 md:w-[800px] lg:w-[900px] bg-zinc-900 border-textColor rounded-lg" onClick={() => onHandleId(item.question)}>
+
+                            data.map((item) => (
+                                <div key={item.id} className="px-4 py-2 mt-4 mb-4 md:w-[800px] lg:w-[900px] bg-zinc-900 border-textColor rounded-lg" onClick={() => onHandleId(item)}>
                                     <h1 className="text-textColor font-create text-md md:text-2xl">
                                         {item.question}
                                     </h1>
@@ -92,7 +96,7 @@ const Home: React.FC = () => {
                                     </div>
                                 </div>
                             ))
-                         
+
                         )}
                     </div>
                 </div>

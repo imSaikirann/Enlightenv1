@@ -40,6 +40,7 @@ const Home: React.FC = () => {
         fetchData();
     }, [setData]);
 
+  
     const getReadTime = (text: string) => {
         const wordsPerMinute = 200;
         const words = text.trim().split(/\s+/).length;

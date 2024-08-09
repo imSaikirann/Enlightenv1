@@ -25,9 +25,15 @@ export interface Profile {
   
 }
 
-export interface selectedData {
-    question:string;
-}
+export interface Question {
+    id: string;
+    question: string; 
+  }
+  
+  export interface selectedData {
+    id: string;
+    question: Question; 
+  }
 
 
 export const questionAtom = atom< questionData[]>({
