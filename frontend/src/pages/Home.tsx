@@ -58,10 +58,11 @@ const Home: React.FC = () => {
                     <div>
                         {data.length > 0 && (
                             <div className='text-white flex flex-col items-center justify-center space-y-3  pt-8  md:p-6 pb-8 md:pb-12 '>
-                                <h2 className='hidden md:block text-4xl md:text-5xl font-semibold opacity-70 text-center'>Have questions on your mind?</h2>
-                                <h2 className='md:hidden text-4xl md:text-5xl font-semibold opacity-70 text-center'>Have questions </h2>
-                                <h2 className='md:hidden text-4xl md:text-5xl font-semibold opacity-70 text-center '> on your mind?</h2>
-                                <h2 className='text-xl text-center md:text-5xl font-semibold opacity-70'>Get Answers on Enlighten</h2>
+                                <h2 className='hidden md:block text-4xl md:text-5xl font-semibold  opacity-70 text-center'>Have questions on your mind?</h2>
+                                <h2 className='md:hidden text-3xl md:text-5xl font-medium opacity-70 font-create  '>Have questions ?</h2>
+
+
+                                <h2 className='text-2xl text-center md:text-5xl font-medium opacity-70 font-create'>Get Answers on Enlighten </h2>
                             </div>
                         )}
 

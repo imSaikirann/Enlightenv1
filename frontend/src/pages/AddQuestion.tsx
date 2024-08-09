@@ -60,7 +60,7 @@ export const AskQuestion = () => {
   <h3 className="font-bold text-lg mb-4 font-create">Rules for Asking Questions:</h3>
   <ul className="list-disc list-inside font-create text-sm text-gray-700 space-y-2">
     <li className="break-words">Start the question with "Where", "How", "What", "Why", "When", or "Who".</li>
-    <li className="break-words">Do not include a question mark at the end.</li>
+    <li className="break-words">Include a question mark at the end.</li>
     <li className="break-words">Use clear and proper language; avoid slang or non-standard abbreviations.</li>
     <li className="break-words">Ensure the question is clear, concise, and a complete sentence.</li>
     <li className="break-words">Avoid repetitive words and unnecessary details.</li>
