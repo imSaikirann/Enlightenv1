@@ -1,13 +1,29 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState, userStateSelector } from '../store/atoms/signupAtom';
 import { Link } from 'react-router-dom';
 import { getNotifications } from '../api/data';
+import { notificatiosnCount, notificatiosnData } from '../store/atoms/dataAtoms'
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const isUser = useRecoilValue(userStateSelector);
     const setUserState = useSetRecoilState(userState);
+    const [notificationsCount, setNotificationsCount] = useRecoilState(notificatiosnCount)
+    const [mark,setMark] = useState(false)
+    const setNotificatiosData = useSetRecoilState(notificatiosnData)
+
+    useEffect(() => {
+        const storedCount = localStorage.getItem('count');
+        const parsedStoredCount = storedCount ? parseInt(storedCount, 10) : 0;
+    
+        if (notificationsCount > parsedStoredCount) {
+            localStorage.setItem('count', notificationsCount.toString());
+            setMark(true)
+            // window.location.reload();
+        }
+    }, [notificationsCount]);
+    
 
     useEffect(() => {
         const isLoggedIn = localStorage.getItem('isUserLoggedIn') === 'true';
@@ -36,7 +52,9 @@ export default function Navbar() {
     const handleNotifications = async () => {
         try {
             const res = await getNotifications();
-            console.log(res);
+            setNotificationsCount(res.answers.length);
+            setNotificatiosData(res.answers)
+           
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -44,8 +62,10 @@ export default function Navbar() {
 
     useEffect(() => {
         handleNotifications();
-    }, []); 
-
+    }, []);
+const handleResetMark =()=>{
+    setMark(false)
+}
     return (
         <>
             <div className="fixed top-0 left-0 right-0 h-[65px] px-4 md:w-full md:h-[80px] md:px-6 bg-primary border-b-1 border-secondary flex flex-row justify-between items-center z-40">
@@ -83,24 +103,43 @@ export default function Navbar() {
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center space-x-4">
                     <div className='flex flex-row space-x-4'>
-                    <Link to="/notifications">
-                        <div className="flex items-center  space-x-1 text-primary opacity-95 cursor-pointer " onClick={handleNotifications}>
-                       
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 text-textColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-                            </svg>
+                        <Link to="/notifications">
+                            <div className="relative flex items-center space-x-1 text-primary opacity-95 cursor-pointer" onClick={handleResetMark} >
+                                <div className="relative">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth="1.5"
+                                        stroke="currentColor"
+                                        className="size-6 text-textColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+                                        />
+                                    </svg>
 
-                            <div>
-                            <h2 className="text-textColor px-2 opacity-75">Notifications</h2>
+                                   
+                                   {mark ? (
+                                     <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                                   ):(
+                                    <div>
+                                        </div>
+                                   )}
+                                </div>
+
+                                <div>
+                                    <h2 className="text-textColor px-2 opacity-75">Notifications</h2>
+                                </div>
                             </div>
-                             
-                         
-                        </div>
+
                         </Link>
 
                         <div className="flex items-center space-x-1 text-primary opacity-95 cursor-pointer">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5 text-slate-200 opacity-75">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 text-slate-200 opacity-75">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
                             </svg>
 
                             <Link to="/questions">

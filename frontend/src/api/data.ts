@@ -85,7 +85,7 @@ export const  getNotifications= async () => {
         'Authorization': token
       }
     });
-
+  
     return response.data;
   
   } catch (error: any) {
@@ -98,3 +98,5 @@ export const  getNotifications= async () => {
     return { error: errorMessage };
   }
 };
+
+

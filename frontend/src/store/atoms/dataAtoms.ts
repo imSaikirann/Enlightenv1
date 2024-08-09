@@ -56,3 +56,12 @@ export const userProfile = atom<Profile[]>({
     default: []
 });
 
+export const notificatiosnCount = atom({
+    key:"notificatiosnCount",
+    default:0
+})
+
+export const notificatiosnData = atom({
+    key:"notificatiosnData",
+    default:[]
+})
