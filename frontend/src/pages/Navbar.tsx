@@ -15,12 +15,12 @@ export default function Navbar() {
 
     useEffect(() => {
         const storedCount = localStorage.getItem('count');
-        const parsedStoredCount = storedCount ? parseInt(storedCount, 10) : 0;
-
+        const parsedStoredCount = storedCount ? parseInt(storedCount, 10) : 0
+        console.log(parsedStoredCount,notificationsCount)
         if (notificationsCount > parsedStoredCount) {
             localStorage.setItem('count', notificationsCount.toString());
             setMark(true)
-            // window.location.reload();
+           
         }
     }, [notificationsCount]);
 
@@ -43,6 +43,7 @@ export default function Navbar() {
             await localStorage.removeItem('token');
             localStorage.removeItem('isUserLoggedIn');
             setUserState(false);
+            localStorage.removeItem('count')
             window.location.reload();
         } catch (error) {
             console.error('Logout failed:', error);
