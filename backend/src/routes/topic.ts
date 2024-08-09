@@ -43,7 +43,6 @@ topicRoutes.get('/bulk', async (c) => {
             authorId: topic.authorId,
             authorName: topic.author?.userName ,
             createdAt : topic.createdAt,
-            qauthorName:topic.qauthorName,
         }));
 
         return c.json({ data: response }, 200);
@@ -148,10 +147,7 @@ topicRoutes.get('/user/notifications', async (c) => {
         },
       });
 
-    
-    
-   
-  
+      console.log(user)
       if (!user) {
         return c.json({ message: 'User not found' }, 404);
       }
@@ -234,17 +230,7 @@ topicRoutes.get('/user/notifications', async (c) => {
         });
         
       
-        const userWithAnswers = await prisma.user.findUnique({
-            where: {
-                id: question.authorId, 
-            },
-            include: {
-                answers: true, 
-            },
-        });
-        
-        console.log(userWithAnswers);
-        
+    
 
         const response = {
            

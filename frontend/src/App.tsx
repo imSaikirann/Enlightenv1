@@ -18,7 +18,7 @@ function App() {
 
   return (
     <>
-    <div className='bg-black '>
+    <div className ='bg-black h-screen '>
     <BrowserRouter>
     <Analytics />
     <Navbar/>

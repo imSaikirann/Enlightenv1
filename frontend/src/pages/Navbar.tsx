@@ -51,9 +51,15 @@ export default function Navbar() {
 
     const handleNotifications = async () => {
         try {
-            const res = await getNotifications();
-            setNotificationsCount(res.answers.length);
-            setNotificatiosData(res.answers)
+            const isUserLoggedIn = localStorage.getItem('isUserLoggedIn');
+            console.log(isUserLoggedIn)
+            if(isUserLoggedIn === 'true')
+            {
+                const res = await  getNotifications();
+                setNotificationsCount(res.answers.length);
+                setNotificatiosData(res.answers)
+            }
+           
            
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -74,13 +80,47 @@ const handleResetMark =()=>{
                 </div>
 
                 <div className='flex flex-row items-center justify-center space-x-6 md:hidden'>
-                    <div className='flex flex-row items-center justify-center space-x-2'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 text-slate-200 opacity-75">
+                    <div className='flex flex-row items-center justify-center space-x-4'>
+                        
+                        <Link to={isUser ? "/create" : "/signup"} onClick={handleMenuClose}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"  className="w-5 h-5 md:w-6 md:h-6 opacity-65 text-textColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                         </svg>
-                        <Link to={isUser ? "/create" : "/signup"} onClick={handleMenuClose}>
-                            <h2 className="text-sm font-create opacity-75 font-normal text-textColor text-center">Write</h2>
                         </Link>
+
+                    {isUser && (
+                            <Link to="/notifications">
+                            <div className="relative flex items-center space-x-1 text-primary opacity-95 cursor-pointer" onClick={handleResetMark} >
+                                <div className="relative">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth="1.5"
+                                        stroke="currentColor"
+                                        className="w-5 h-5 md:w-6 md:h-6 opacity-65 text-textColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+                                        />
+                                    </svg>
+
+                                   
+                                   {mark ? (
+                                     <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                                   ):(
+                                    <div>
+                                        </div>
+                                   )}
+                                </div>
+
+                            </div>
+
+                        </Link>
+                    )}
+
                     </div>
                     <div className="cursor-pointer md:hidden flex items-center" onClick={toggleMenu}>
 
@@ -103,39 +143,42 @@ const handleResetMark =()=>{
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center space-x-4">
                     <div className='flex flex-row space-x-4'>
-                        <Link to="/notifications">
-                            <div className="relative flex items-center space-x-1 text-primary opacity-95 cursor-pointer" onClick={handleResetMark} >
-                                <div className="relative">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth="1.5"
-                                        stroke="currentColor"
-                                        className="size-6 text-textColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
-                                        />
-                                    </svg>
+                       {!isUser && (
+                         <Link to="/notifications">
+                         <div className="relative flex items-center space-x-1 text-primary opacity-95 cursor-pointer" onClick={handleResetMark} >
+                             <div className="relative">
+                                 <svg
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     fill="none"
+                                     viewBox="0 0 24 24"
+                                     strokeWidth="1.5"
+                                     stroke="currentColor"
+                                     className="size-6 text-textColor"
+                                 >
+                                     <path
+                                         strokeLinecap="round"
+                                         strokeLinejoin="round"
+                                         d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+                                     />
+                                 </svg>
 
-                                   
-                                   {mark ? (
-                                     <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-                                   ):(
-                                    <div>
-                                        </div>
-                                   )}
-                                </div>
+                                
+                                {mark ? (
+                                  <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                                ):(
+                                 <div>
+                                     </div>
+                                )}
+                             </div>
 
-                                <div>
-                                    <h2 className="text-textColor px-2 opacity-75">Notifications</h2>
-                                </div>
-                            </div>
+                             <div>
+                                 <h2 className="text-textColor px-2 opacity-75">Notifications</h2>
+                             </div>
+                         </div>
 
-                        </Link>
+                     </Link>
+                       
+                       )}
 
                         <div className="flex items-center space-x-1 text-primary opacity-95 cursor-pointer">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 text-slate-200 opacity-75">
@@ -156,6 +199,7 @@ const handleResetMark =()=>{
                         <div>
                             <Link to='/create'><h3 className="text-textColor opacity-75 px-2  ">Write</h3></Link>
                         </div>
+                        
                     </div>
                     {isUser ? (
                         <button onClick={handleLogout} className="bg-red-400 text-white px-4 py-2 rounded-full">Logout</button>

@@ -1,17 +1,38 @@
-import { useRecoilValue } from "recoil"
-import { notificatiosnData } from "../store/atoms/dataAtoms"
+import { useRecoilValue } from "recoil";
+import { notificatiosnData } from "../store/atoms/dataAtoms";
+import { useNavigate } from "react-router-dom";
 
-export default function Notifications()
-{
-    const notificationData = useRecoilValue(notificatiosnData)
+export default function Notifications() {
+    const navigate = useNavigate();
+    const notificationData = useRecoilValue(notificatiosnData);
+
+    const handleView = (item:any) => {
+        const id = item.topicId;
+        navigate(`/content/${id}`);
+    };
+
     return (
-        <div className='bg-back pb-72 '>
-     <div className="bg-back m-3  h-auto mt-[65px] md:mt-[80px] md:pt-6  md:m-6 md:px-16">
-     {notificationData.map((item) => (
-        <h2 key={item}>Some one answersed your question</h2>
-))}
-
-     </div>
+        <div className="bg-white pb-72 h-screen">
+            <div className="bg-white m-3 h-auto mt-[75px] md:mt-[80px] md:pt-6 md:m-6 md:px-16">
+                <div className="flex flex-col">
+                    {notificationData.length === 0 ? (
+                        <div className="text-center text-gray-500 py-6 flex items-center justify-center">
+                            🚫 No notifications yet. We'll notify you if anything comes through!
+                        </div>
+                    ) : (
+                        notificationData.map((item, index) => (
+                            <div key={index}>
+                                <h2 
+                                    className="bg-zinc-900 mb-3 px-4 py-3 text-sm cursor-pointer lg:mb-1 lg:py-4 lg:px-4 text-textColor font-logo"
+                                    onClick={() => handleView(item)}
+                                >
+                                    🎉 Someone answered your question! 👀 Click here to reveal the answer.
+                                </h2>
+                            </div>
+                        ))
+                    )}
+                </div>
+            </div>
         </div>
-    )
+    );
 }
