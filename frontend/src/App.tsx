@@ -31,7 +31,7 @@ function App() {
       <Route path='/profile' element={<Profile/>}></Route>
       <Route path='/questions' element={<Qeustions/>}></Route>
       <Route path='/notifications' element={<Notifications/>}></Route>
-      <Route path='/askquestions' element={<AskQuestion></AskQuestion>}></Route>
+      <Route path='/askquestions' element={isUser ? <AskQuestion/> : <Signup/>}></Route>
       <Route path="/create"  element={isUser ? <Create/> : <Signup/>} />
 
     </Routes>
