@@ -5,6 +5,7 @@ import { userState, authLoadingState } from '../store/atoms/signupAtom';
 import { errorAtom } from '../store/atoms/errorAtom';
 import { signup } from '../api/auth';
 import { useNavigate,Link } from 'react-router-dom'
+import Alert from '../components/Alert';
 
 
 
@@ -20,6 +21,7 @@ const Signup: React.FC = () => {
   const error = useRecoilValue(errorAtom);
   const [loading, setLoadingLocal] = useState(false);
   const navigate = useNavigate()
+  const [success,setSuccess] = useState(false)
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -33,6 +35,7 @@ const Signup: React.FC = () => {
 
     if (user.token) {
       localStorage.setItem('token', user.token)
+      setSuccess(true)
       navigate('/')
       window.location.reload()
     }
@@ -48,6 +51,9 @@ const Signup: React.FC = () => {
 
   return (
     <div className='flex justify-center items-center h-screen bg-white'>
+    {success && (
+      <Alert message={"Account Created"}/>
+    )}
    <div>
    <form onSubmit={handleSubmit}>
         <div className='w-[350px] border-2 rounded-lg flex flex-col justify-center items-center px-6 py-8 space-y-5 shadow-sm'>

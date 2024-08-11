@@ -5,6 +5,7 @@ import { dataAtom } from '../store/atoms/dataAtoms';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 
+
 export interface Data {
     title: string;
     information: string;
@@ -18,6 +19,7 @@ export interface Data {
 const Home: React.FC = () => {
     const [data, setData] = useRecoilState<Data[]>(dataAtom);
     const [loading, setLoading] = useState(true);
+   
     const navigate = useNavigate()
     useEffect(() => {
         const fetchData = async () => {
@@ -31,6 +33,7 @@ const Home: React.FC = () => {
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
+         
                 setData([]);
             } finally {
                 setLoading(false);
@@ -56,6 +59,7 @@ const Home: React.FC = () => {
             <div className="bg-back m-3  h-auto mt-[65px] md:mt-[80px] md:pt-6  md:m-6 md:px-16">
                 <div className="flex items-center justify-center ">
                     <div>
+                      
                         {data.length > 0 && (
                             <div className='text-white flex flex-col items-center justify-center space-y-3  pt-8  md:p-6 pb-8 md:pb-12 '>
                                 <h2 className='hidden md:block text-4xl md:text-5xl font-semibold  opacity-70 text-center'>Have questions on your mind?</h2>

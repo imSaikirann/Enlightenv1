@@ -14,6 +14,7 @@ export interface Data {
     authorId: string;
     question: string;
     createdAt: string;
+    qauthorName:string;
 }
 
 const Home: React.FC = () => {
@@ -21,7 +22,7 @@ const Home: React.FC = () => {
      const setQuestion = useSetRecoilState(selectedQuestion);
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true);
-
+    console.log(data)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -73,7 +74,7 @@ const Home: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='border-t-2  mt-3 w-full'>
+                    <div className='border-t-2  mt-1  w-full'>
                         {loading ? (
                             <div className='flex items-center justify-center h-screen'>
                                 <div role="status">
@@ -87,12 +88,13 @@ const Home: React.FC = () => {
                         ) : (
 
                             data.map((item) => (
-                                <div key={item.id} className="px-4 py-2 mt-4 mb-4 md:w-[800px] lg:w-[900px] bg-zinc-900 border-textColor rounded-lg" onClick={() => onHandleId(item)}>
-                                    <h1 className="text-textColor font-create text-md md:text-2xl">
+                                <div key={item.id} className="px-4 space-y-2 md:space-y-3 py-2 mt-4 mb-4 md:w-[800px] lg:w-[900px] bg-zinc-900 border-textColor rounded-lg" onClick={() => onHandleId(item)}>
+                                    <h1 className="text-textColor text-md font-create text-md md:text-2xl">
                                         {item.question}
                                     </h1>
-                                    <div className='flex flex-row space-x-3 justify-between text-textColor opacity-50'>
+                                    <div className='flex flex-row space-x-3 justify-between text-sm text-textColor opacity-50'>
                                         <div>{formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}</div>
+                                        <div>From {item.qauthorName}</div>
                                     </div>
                                 </div>
                             ))

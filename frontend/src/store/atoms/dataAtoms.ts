@@ -14,6 +14,7 @@ export interface questionData {
     id: string;
     authorId: string;
     createdAt:string;
+    qauthorName:string;
 }
 
 export interface Profile {

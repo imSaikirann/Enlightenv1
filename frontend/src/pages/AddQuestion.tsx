@@ -56,17 +56,27 @@ export const AskQuestion = () => {
               </button>
             </div>
           </form>
-          <div className="mt-6 px-4 md:px-8">
-  <h3 className="font-bold text-lg mb-4 font-create">Rules for Asking Questions:</h3>
-  <ul className="list-disc list-inside font-create text-sm text-gray-700 space-y-2">
-    <li className="break-words">Start the question with "Where", "How", "What", "Why", "When", or "Who".</li>
-    <li className="break-words">Include a question mark at the end.</li>
-    <li className="break-words">Use clear and proper language; avoid slang or non-standard abbreviations.</li>
-    <li className="break-words">Ensure the question is clear, concise, and a complete sentence.</li>
-    <li className="break-words">Avoid repetitive words and unnecessary details.</li>
-    <li className="break-words">Do not ask for personal or sensitive information.</li>
-  </ul>
+
+
+
+          <div className="flex p-4 mt-6 text-sm text-black opacity-90 rounded-lg bg-blue-50" role="alert">
+  <svg className="flex-shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+  </svg>
+  <span className="sr-only">Info</span>
+  <div>
+    <span className="font-medium opacity-100">Rules for Asking Questions:</span>
+      <ul className="mt-1.5 list-disc">
+        <li>Start the question with "Where", "How", "What", "Why", "When", or "Who".</li>
+        <li>Include a question mark at the end.</li>
+        <li>Use clear and proper language; avoid slang or non-standard abbreviations</li>
+        <li>Ensure the question is clear, concise, and a complete sentence.</li>
+        <li>Avoid repetitive words and unnecessary details.</li>
+        <li>Do not ask for personal or sensitive information.</li>
+    </ul>
+  </div>
 </div>
+
 
 
         </div>
