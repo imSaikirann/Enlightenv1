@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-// Define the data structure for the topic
+
 export interface Data {
   title: string;
   information: string;
@@ -10,7 +10,7 @@ export interface Data {
   authorId: string;
 }
 
-// Define the API response structure
+
 export interface ApiResponse {
   data: Data;
 }
@@ -96,32 +96,61 @@ export const Content: React.FC = () => {
                 </div>
               </div>
             ) : data ? (
-              <>
-                <div className='p-1'>
-                  <div className='flex flex-row items-center text-sm justify-between text-textColor opacity-45'>
-                    <div>
-                    <button className='text-lg hover:underline' onClick={speakText} disabled={isSpeaking}>
-                        {isSpeaking ? '' : 'Listen'}
+              <div className='flex flex-col w-[400px] p-2  md:w-[780px]'>
+              <div className='p-1'>
+                <div className='flex flex-row items-center justify-between text-sm text-textColor opacity-45'>
+                  <div className='flex items-center '>
+                    <button 
+                      className='text-lg hover:underline' 
+                      onClick={speakText} 
+                      disabled={isSpeaking}
+                    >
+                      {isSpeaking ? '' : 'Listen'}
+                    </button>
+                    {isSpeaking && (
+                      <button 
+                        className='ml-2' 
+                        onClick={stopSpeaking}
+                      >
+                        Stop
                       </button>
-                      {isSpeaking && <button  onClick={stopSpeaking}>Stop</button>}
-                    </div>
-                    <div onClick={handleShare} className='cursor-pointer'>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-5">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
-</svg>
-
-                    </div>
+                    )}
+                  </div>
+                  <div 
+                    onClick={handleShare} 
+                    className='cursor-pointer'
+                  >
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      strokeWidth="1.5" 
+                      stroke="currentColor" 
+                      className="w-5 h-5"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" 
+                      />
+                    </svg>
                   </div>
                 </div>
-                <div className='border-[1px] mt-2 mb-2 opacity-10'></div>
-                <h3 className='text-3xl opacity-80 text-textColor md:text-3xl font-bold mb-2 '>
-                  {data.title}   <div>
-                      <h1 className='text-sm opacity-70 font-normal pt-2 '>{getReadTime(data.information)}</h1>
-                    </div>
-                </h3>
-                <p className='text-lg text-textColor leading-8 opacity-55'>{data.information}</p>
-
-              </>
+              </div>
+              <div className='border-[1px] mt-2 mb-2 opacity-10 '></div>
+              <h3 className='text-3xl opacity-80 text-textColor md:text-3xl font-bold mb-2'>
+                {data.title}
+                <div className=''>
+                  <h1 className='text-sm opacity-70 font-normal pt-2'>
+                    {getReadTime(data.information)}
+                  </h1>
+                </div>
+              </h3>
+              <p className='text-lg text-textColor leading-8 opacity-55'>
+                {data.information}
+              </p>
+            </div>
+            
             ) : (
               <p>No data found.</p>
             )}
