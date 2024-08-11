@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Alert from '../components/Alert';
 
 
 export interface Data {
@@ -21,6 +22,7 @@ export const Content: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const shareurl = window.location.origin + `/content/${id}`
+  const [copy,setCopy] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -72,21 +74,29 @@ export const Content: React.FC = () => {
     }
   };
 
-  const handleShare = () =>{
+  const handleShare = () => {
     navigator.clipboard.writeText(shareurl)
-    .then(()=>{
-      alert('Url is copied')
-    }).catch(err =>{
-      console.log(err)
-    })
-  }
-
+      .then(() => {
+        setCopy(true);
+  
+        setTimeout(() => {
+          setCopy(false);
+        }, 2000);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+  
   return (
     <div className='bg-zinc-900 h-auto pb-96'>
       <div className="m-1 h-auto bg-zinc-900  pb-96 mt-[65px] md:mt-[80px] md:m-6 md:px-16">
         <div className="flex items-center justify-center">
           <div className='m-2 md:mt-4'>
-            {loading ? (
+            {copy && <div className='p-2'>
+              <Alert message={"Copied"} />
+              </div>}
+          {loading ? (
               <div className='flex items-center justify-center h-screen'>
                 <div role="status">
                   <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-slate-900" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +106,7 @@ export const Content: React.FC = () => {
                 </div>
               </div>
             ) : data ? (
-              <div className='flex flex-col w-[400px] p-2  md:w-[780px]'>
+              <div className='flex flex-col w-[400px] p-4  md:w-[780px]'>
               <div className='p-1'>
                 <div className='flex flex-row items-center justify-between text-sm text-textColor opacity-45'>
                   <div className='flex items-center '>
@@ -134,6 +144,7 @@ export const Content: React.FC = () => {
                         d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" 
                       />
                     </svg>
+
                   </div>
                 </div>
               </div>
