@@ -23,7 +23,7 @@ export default function Notifications() {
                         notificationData.map((item, index) => (
                             <div key={index}>
                                 <h2 
-                                    className="bg-zinc-900 mb-3 px-4 py-3 text-sm cursor-pointer lg:mb-1 lg:py-4 lg:px-4 text-textColor font-logo"
+                                    className="bg-zinc-900  px-4 py-3 mb-2  rounded-sm text-sm cursor-pointer md:mb-2 lg:mb-3 lg:py-4 lg:px-4 text-textColor font-logo"
                                     onClick={() => handleView(item)}
                                 >
                                     🎉 Someone answered your question! 👀 Click here to reveal the answer.
