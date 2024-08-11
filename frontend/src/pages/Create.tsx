@@ -64,11 +64,11 @@ export const Create = () => {
   return (
     <div className="bg-white min-h-screen">
       <div className="m-4 p-2 md:mt-[70px] md:m-8 md:px-12">
-        <div className="flex items-center justify-center">
+        <div className="flex items-center  mt-12  justify-center">
           {success ? (
             <Alerts message={"Submitted successfully"} />
           ) : (
-            <div className="flex flex-col w-full max-w-2xl">
+            <div className="flex flex-col mt-10 w-full max-w-2xl">
               <form onSubmit={handleSubmit} className="w-full mt-12">
                 <div className="mb-4">
                   <input
