@@ -80,7 +80,13 @@ export default function Navbar() {
         <>
             <div className="fixed top-0 left-0 right-0 h-[65px] px-4 md:w-full md:h-[80px] md:px-6 bg-primary border-b-1 border-secondary flex flex-row justify-between items-center z-40">
                 <div className="flex items-center">
-                    <Link to='/'><h2 className="font-medium font-logo text-textColor text-2xl md:text-3xl">Enlighten</h2></Link>
+               <Link to='/'>
+               <div className='flex flex-row items-center justify-center' >
+                  
+                    <div>
+                    <h2 className="font-medium font-logo text-textColor text-2xl md:text-3xl">Enlighten</h2>
+                    </div>
+                   </div></Link>
                 </div>
 
                 <div className='flex flex-row items-center justify-center space-x-6 md:hidden'>
